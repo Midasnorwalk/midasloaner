@@ -1,1 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loaner Car Agreement - Midas of Norwalk</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 800px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    .initial-box, .checkbox-section {
+      margin: 10px 0;
+    }
+    canvas {
+      border: 1px solid #000;
+      margin-top: 10px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #thank-you {
+      display: none;
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      color: green;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Midas of Norwalk - Loaner Car Agreement</h1>
+  <div id="thank-you">Thank you! Your form has been submitted.</div>
+  <form id="loaner-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" enctype="multipart/form-data">
+    <h2>Customer Information</h2>
+    <label>Full Name <input type="text" name="name" required></label>
+    <label>Email <input type="email" name="email" required></label>
+    <label>Phone <input type="text" name="phone" required></label>
+    <label>Address <input type="text" name="address" required></label>
+    <label>City <input type="text" name="city" required></label>
+    <label>State <input type="text" name="state" required></label>
+    <label>ZIP <input type="text" name="zip" required></label>
+    <label>Date of Birth <input type="date" name="dob"></label>
+    <label>Insurance Company <input type="text" name="insurance" required></label>
+    <label>Policy # <input type="text" name="policy" required></label>
+    <label>Upload a photo of your Driver's License <input type="file" name="dl_photo" accept="image/*,application/pdf" required></label>
+
+    <h2>Agreement Terms - Please Initial</h2>
+    <div class="initial-box">
+      <label>Initial to confirm you have Comprehensive/Collision coverage: <input type="text" name="init_coverage" required></label>
+    </div>
+    <div class="initial-box">
+      <label>Initial to authorize DMV driving record access: <input type="text" name="init_dmv" required></label>
+    </div>
+    <div class="initial-box">
+      <label>Initial to confirm NO smoking/pets ($400 fee if violated): <input type="text" name="init_smoking" required></label>
+    </div>
+    <div class="initial-box">
+      <label>Initial to accept liability for tickets/tolls: <input type="text" name="init_tickets" required></label>
+    </div>
+    <div class="initial-box">
+      <label>Initial to confirm car will not leave California: <input type="text" name="init_ca" required></label>
+    </div>
+    <div class="initial-box">
+      <label>Initial to confirm you will return the car within 24 hours after repair completion (or pay $50/day late fee): <input type="text" name="init_late" required></label>
+    </div>
+
+    <h2>Signature</h2>
+    <p>Draw your signature below:</p>
+    <canvas id="signature-pad" width="600" height="200"></canvas>
+    <input type="hidden" name="signature" id="signature-data">
+    <button type="button" onclick="clearCanvas()">Clear Signature</button>
+
+    <div class="checkbox-section">
+      <label><input type="checkbox" name="agree" required> I agree to the terms and conditions listed above</label>
+    </div>
+
+    <label>Date <input type="date" name="signed_date" required></label>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const canvas = document.getElementById('signature-pad');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mouseout', () => drawing = false);
+    canvas.addEventListener('mousemove', draw);
+
+    function draw(e) {
+      if (!drawing) return;
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#000';
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+    }
+
+    const form = document.getElementById('loaner-form');
+    form.addEventListener('submit', function(e) {
+      const signatureData = canvas.toDataURL();
+      document.getElementById('signature-data').value = signatureData;
+
+      // Show thank you message after slight delay (simulating form submission)
+      setTimeout(() => {
+        form.style.display = 'none';
+        document.getElementById('thank-you').style.display = 'block';
+      }, 500);
+    });
+  </script>
+</body>
+</html>
 
